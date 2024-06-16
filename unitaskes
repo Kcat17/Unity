@@ -1,0 +1,208 @@
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Networking;
+using System;
+using System.Threading.Tasks;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+//使用jobject的库 Newtonsoft.Json
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using UMP;
+using System.Text;
+using Object = UnityEngine.Object;
+
+public class UniTaskSample : MonoBehaviour
+{
+    // public UniversalMediaPlayer temp;
+    // public Button btn1;
+    // public Button btn2;
+    // public Transform parent;
+    
+
+    private readonly string _baseUrl = "http://10.30.187.81:8103/bigScreenDevice/getCameraStream";
+    //此时我有6个视频框，所以我需要6个视频框的url地址
+    private readonly string[] _urls =
+    {
+        "http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=07d9979c103b4f5d9e9af1cfb7a5de1e",
+        "http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=018ae2dfb71e494591e6fced92030917",
+        "http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=024e9231d32149e09a0947f4ce86501a",
+        "http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=1a5db29b0fcd4224a8b166dc77a6d331",
+        "http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=02a8c5d220fb4410996acb24027a118f",
+        "http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=3d5fdf391d9c4278ad7a718365da4218"
+    };
+    //生成构造函数
+    public UniTaskSample()
+    {
+        
+    }
+    // Start is called before the first frame update
+    async void Start()
+    {
+        //btn1.GetComponentInChildren<Text>().text = GetTextAsync("https://example.com/somefile.txt");
+        //btn1.GetComponentInChildren<Text>().text = GetTextAsync("https://example.com/somefile.txt");修改上述代码
+       // string text = await GetTextAsync("https://example.com/somefile.txt");
+         //btn1.GetComponentInChildren<Text>().text
+        //ChangeBtnTextClick(this.GetCancellationTokenOnDestroy()).Forget();
+        //Awaittime().Forget();
+        //
+        //给按钮的点击事件
+
+        //PlayStreamMediaFromJsonAsync("http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=07d9979c103b4f5d9e9af1cfb7a5de1e").Forget();
+        //播放视频的方法
+        
+
+        //接受GetCameraStreamAsync(string code)的值
+        //GetCameraStreamAsync("07d9979c103b4f5d9e9af1cfb7a5de1e").Forget();
+    }
+    public async UniTaskVoid Awaittime()
+    {
+        Debug.Log("开始");
+        await UniTask.Delay(1000);
+        Debug.Log("结束延时");
+    }
+    //http://10.30.187.81:8103/bigScreenDevice/getCameraStream?code=07d9979c103b4f5d9e9af1cfb7a5de1e
+    //我要用UniTask get异步请求上面的地址、
+    // public async UniTask<string> GetCameraStreamAsync(string code)
+    // {
+    //     try
+    //     {
+    //         using var httpClient = new HttpClient();
+    //         var requestUri = $"{_baseUrl}?code={code}";
+    //
+    //         // 发起GET请求并等待响应
+    //         var responseMessage = await httpClient.GetAsync(requestUri, cancellationToken: this.GetCancellationTokenOnDestroy());
+    //
+    //         // 确保响应状态是成功的
+    //         responseMessage.EnsureSuccessStatusCode();
+    //
+    //         // 读取响应内容
+    //         var content = await responseMessage.Content.ReadAsStringAsync();
+    //
+    //         return content;
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // 异常处理，根据实际情况调整
+    //         Debug.Log($"请求失败: {ex.Message}");
+    //         throw;
+    //     }
+    // }    
+    //
+    //
+    //
+    // /// <summary>
+    // /// 每次点击修改按钮不同的文本;
+    // /// </summary>
+    // /// <param name="token"></param>
+    // async UniTask ChangeBtnTextClick(CancellationToken token)
+    // {
+    //     var click = btn1.OnClickAsAsyncEnumerable();
+    //     await click.Take(3).ForEachAsync((_, index) =>
+    //     {
+    //         if (token.IsCancellationRequested) return;
+    //         btn1.GetComponentInChildren<Text>().text = index switch
+    //         {
+    //             0 => "再杀",
+    //             1 => "再补一刀",
+    //             _ => ""
+    //         };
+    //     }, cancellationToken: token);
+    //     btn1.GetComponentInChildren<Text>().text = "结束";
+    // }
+    // //UniTask下载网址下的text文本内容
+    // async UniTask<string> GetTextAsync(string url)
+    // {
+    //     using var httpClient = new HttpClient();
+    //     var responseMessage = await httpClient.GetAsync(url, cancellationToken: this.GetCancellationTokenOnDestroy());
+    //     responseMessage.EnsureSuccessStatusCode();
+    //     var content = await responseMessage.Content.ReadAsStringAsync();
+    //     return content;
+    // }
+    // async UniTask ExampleUsage()
+    // {
+    //     string url = "https://example.com/somefile.txt";
+    //     string content = await GetTextAsync(url);
+    //     
+    //     // 这里可以使用content变量，它包含了从url获取的文本内容
+    //     await UniTask.SwitchToMainThread();
+    //     btn1.GetComponentInChildren<Text>().text = content;
+    // }
+    // //UniTask的Get请求读取json
+    async UniTask<string> GetJsonAsync(string url)
+    {
+        using var httpClient = new HttpClient();
+        var responseMessage = await httpClient.GetAsync(url, cancellationToken: this.GetCancellationTokenOnDestroy());
+        responseMessage.EnsureSuccessStatusCode();
+        var content = await responseMessage.Content.ReadAsStringAsync();
+        return content;
+    }
+    //UniTask的Post请求读取json
+    // async UniTask<string> PostJsonAsync(string url, string jsonData)
+    // {
+    //     using var httpClient = new HttpClient();
+    //     var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+    //     var responseMessage = await httpClient.PostAsync(url, content, cancellationToken: this.GetCancellationTokenOnDestroy());
+    //     responseMessage.EnsureSuccessStatusCode();
+    //     var contentResult = await responseMessage.Content.ReadAsStringAsync();
+    //     return contentResult;
+    // }
+    
+
+    async UniTaskVoid PlayStreamMediaFromJsonAsync(string url,UniversalMediaPlayer videoPlayer)
+    {
+        string json = await GetJsonAsync(url);
+        Debug.Log(json);
+
+            // 解析json案例 例如json是{        "msg": "http://172.18.8.10:83/openUrl/buSUJK8/live.m3u8","code": 200}
+            var jsonObject = JObject.Parse(json);
+            var msg = jsonObject["msg"].Value<string>();
+
+            // 播放视频
+                //根据temp实例化一个对象
+        videoPlayer.Path = msg;
+        videoPlayer.Play();
+
+
+
+        //
+    }
+    //根据url数组的长度 生成多个循环播放视频 要求使用Unitask多次调用 PlayStreamMediaFromJsonAsync(string url)
+     async UniTaskVoid PlayStreamMediaFromJsonArrayAsync(string[] urls)
+    {
+        for (int i = 0; i < urls.Length; i++)
+        {
+            
+            await UniTask.Delay(1000);  
+        }
+
+
+
+             
+        
+    }
+    //UniTask删除视频对象
+    // async UniTaskVoid DeleteVideoObjectAsync(GameObject videoObject)
+    // {
+    //     if (videoObject != null)
+    //     {
+    //         Destroy(videoObject);
+    //         await UniTask.Delay(200);
+    //     }
+    // }
+    async UniTaskVoid DeleteAllVideoObjectAsync(GameObject parent)
+    {
+            for (var i = 0; i < 6; i++)
+        {
+            Destroy(parent.transform.GetChild(0).gameObject);
+            await UniTask.Delay(200);
+        }
+    }
+}
